@@ -14,7 +14,7 @@ def get_search_data(root, term, max_pages,timeout):
             response = requests.get(f"http://localhost:5000/api/search?rootdomain={root}&term={term}&page={page}",timeout=timeout)
             
             count = 1
-            while response.status_code != 200 and count < 3:  # Retry up to 3 times
+            while response.status_code != 200 and count < 5:  # Retry up to 3 times
                 response = requests.get(f"http://localhost:5000/api/search?rootdomain={root}&term={term}&page={page}",timeout=timeout*(count+1))
                 count += 1
 
@@ -228,7 +228,7 @@ def write_data_to_excel(output_file, data_list):
     print(f"Data saved to {output_file}")
 
 def main(workers,root, terms, max_pages,timeout):
-    output_file = fr"Demo_Search_{root.replace('.','_').replace('/','_')}.xlsx"
+    output_file = fr"Search_{root.replace('.','_').replace('/','_')}.xlsx"
     search_data = run_searches_in_threads(workers,root, terms, max_pages,timeout)
     if search_data:
         write_data_to_excel(output_file, search_data)
@@ -236,7 +236,7 @@ def main(workers,root, terms, max_pages,timeout):
         print("No data extracted.")
 
 if __name__ == "__main__":
-    timeout=5000
+    timeout=50000
     workers=10
     root =  "hp.com/au"
     terms = ["laptop", "printers", "headphone", "camera", "usb", "monitor", "vr", "keyboard", "mouse", "charger"]   # Add multiple terms here 
